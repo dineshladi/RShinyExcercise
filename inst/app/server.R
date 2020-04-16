@@ -2,7 +2,7 @@ server <- function(input, output, session) {
 
   ### render patients sample data
   output$patients_table <- renderDataTable({
-   datatable(head(patients),rownames = FALSE, caption = "Sample Patients Data",
+   datatable(patients,rownames = FALSE, caption = "Sample Patients Data",
              options = list(scrollX=TRUE,
                             columnDefs = list(list(className = 'dt-center', targets = "_all")),
                             class = "compact"))
@@ -10,7 +10,7 @@ server <- function(input, output, session) {
 
   ### render lab tests sample data
   output$lab_tests_table <- renderDataTable({
-    datatable(head(lab_tests), rownames = FALSE, caption = "Sample Lab Tests Data",
+    datatable(head(lab_tests,200), rownames = FALSE, caption = "Sample Lab Tests Data",
               options = list(scrollX=TRUE,
                              columnDefs = list(list(className = 'dt-center', targets = "_all")),
                              class = "compact")) %>%

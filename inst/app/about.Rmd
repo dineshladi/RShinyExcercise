@@ -10,4 +10,4 @@ You can find more about me on:
 * This app is built using a web framework in R called [{shiny}](https://shiny.rstudio.com)
 * Data Visualization is done with [{ggplot2}](https://ggplot2.tidyverse.org)
 
-Browse the source code for this app [here]{https://github.com/dineshladi/RShinyExcercise}
+Browse the source code for this app [here](https://github.com/dineshladi/RShinyExcercise)
