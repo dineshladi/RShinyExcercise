@@ -4,8 +4,8 @@ The dataset contains information of lab test results of the 452 patients. There 
 ### Attributes
 * STUDYID = ID of study group 
 * USUBJID = ID of the subject/patient 
-* BMRKR1 =  
-* BMRKR2 =  
+* BMRKR1 = Biomarker 1 (Continuous value)
+* BMRKR2 = Biomarker 2 (Discrete values: Low, Medium and High)
 * LBTEST = Laboratory Test conducted 
 * LBTESTCD = Code for the laboratory test conducted 
 * LBCAT = Category to which the laboratory test conducted belongs to

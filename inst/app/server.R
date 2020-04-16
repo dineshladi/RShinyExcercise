@@ -19,31 +19,30 @@ server <- function(input, output, session) {
 
   ### UI for dropdown list of columns for distribution plot
   output$attribute_plot <- renderPlot({
-    col1 <- input$attribute1
-    #col2 <- input$attribute2
-    req(col1)
+    selected_var <- input$attribute
+    req(selected_var)
 
-    if (col1 == 'AGE'){
-      p <- ggplot(data = patients, aes(x = !!sym(col1))) +
+    if (selected_var == 'AGE'){
+      p <- ggplot(data = patients, aes(x = !!sym(selected_var))) +
               geom_histogram(stat = "bin", binwidth = 5, fill = "maroon")
     }
-    else if (col1 == 'BMRKR1'){
-      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR1"))), aes(x = !!sym(col1))) +
+    else if (selected_var == 'BMRKR1'){
+      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR1"))), aes(x = !!sym(selected_var))) +
               geom_histogram(stat = "bin", binwidth = 2, fill = "maroon")
     }
-    else if(col1 == 'BMRKR2') {
-      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR2"))), aes(x = !!sym(col1))) +
+    else if(selected_var == 'BMRKR2') {
+      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR2"))), aes(x = !!sym(selected_var))) +
               geom_bar(stat = "count", fill = "maroon")
     }
 
     else {
-     p <- ggplot(data = patients, aes(x = !!sym(col1))) +
+     p <- ggplot(data = patients, aes(x = !!sym(selected_var))) +
              geom_bar(stat = "count", fill = "maroon") +
-             scale_x_discrete(breaks = levels(patients[[col1]]),
-                              labels = addline_format(levels(patients[[col1]])))
+             scale_x_discrete(breaks = levels(patients[[selected_var]]),
+                              labels = addline_format(levels(patients[[selected_var]])))
     }
 
-    p + labs(title = paste0("Distribution of Patients vs ",col1)) +
+    p + labs(title = paste0("Distribution of Patients vs ",selected_var)) +
         theme(plot.title = element_text(hjust = 0.5),
               title = element_text(face = "bold"),
               axis.text.x = element_text(size  = 10))

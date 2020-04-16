@@ -17,6 +17,7 @@ Suggests:
     testthat
 Imports:
     shiny,
+    shinyWidgets,
     dplyr,
     ggplot2,
     DT,
