@@ -5,9 +5,7 @@ patients_data_tab <- tabPanel("Patients",
                         tags$h3("Visualize"),
                         fluidRow(column(
                                  width = 3,
-                                 selectInput("attribute1",label = "Attribute1",choices = c("SEX","RACE","ACTARMCD","BMRKR2","AGE"),multiple = FALSE),
-                                 uiOutput("attribute2_ui"),
-                                 actionButton("render_plot","Render")),
+                                 selectInput("attribute1",label = "Attribute1",choices = c("SEX","RACE","ACTARMCD","BMRKR2","BMRKR1","AGE"),multiple = FALSE)),
                                  column(width = 9, plotOutput("attribute_plot",width = "80%"))
                                  )
                             )
@@ -25,13 +23,15 @@ explore_side_bar_ui <- sidebarPanel(width = 3,
       tags$h5("Select attribute values to see how patients respond over time in different test groups"),
       selectInput("sex", "Sex", choices = levels(lab_tests_joined$SEX), selected = "F", multiple = TRUE,width = '200px'),
       selectInput("race","Race", choices = levels(lab_tests_joined$RACE), selected = "ASIAN", multiple = TRUE,width = '200px'),
-      selectInput("bmrkr2","BMRKR2 ", choices = levels(lab_tests_joined$BMRKR2), selected = "MEDIUM", multiple = TRUE,width = '200px'),
+      sliderInput("bmrkr1","BMRKR1", min = round(min(lab_tests$BMRKR1),2), max = round(max(lab_tests$BMRKR1),2),value = c(1,10) , ticks = FALSE,),
+      selectInput("bmrkr2","BMRKR2", choices = levels(lab_tests_joined$BMRKR2), selected = "MEDIUM", multiple = TRUE,width = '200px'),
       radioButtons("lbtestcd","LBTESTCD ", choices = levels(lab_tests_joined$LBTESTCD), selected = "IGA",inline = TRUE, width = '200px')
                       )
 
 explore_main_panel_ui <- mainPanel(width = 9,
         tags$h3("Summary of individual patient for all the tests"),
-        plotOutput("patient_plot"),
+        fluidRow(column(width = 3,tableOutput("patient_details")),
+                 column(width = 9,plotOutput("patient_plot"))),
         tags$hr(),
         tags$h3("Summary of patients in different treatment groups for the selected attribute values"),
         plotOutput("time_plot")

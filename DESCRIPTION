@@ -21,5 +21,8 @@ Imports:
     ggplot2,
     DT,
     rlang,
+    reshape2,
+    knitr,
+    kableExtra,
     shinythemes,
     markdown

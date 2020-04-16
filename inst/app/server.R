@@ -25,25 +25,51 @@ server <- function(input, output, session) {
 
     if (col1 == 'AGE'){
       p <- ggplot(data = patients, aes(x = !!sym(col1))) +
-        geom_histogram(stat = "bin", binwidth = 5, fill = "maroon")
+              geom_histogram(stat = "bin", binwidth = 5, fill = "maroon")
+    }
+    else if (col1 == 'BMRKR1'){
+      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR1"))), aes(x = !!sym(col1))) +
+              geom_histogram(stat = "bin", binwidth = 2, fill = "maroon")
     }
     else if(col1 == 'BMRKR2') {
-      p <- ggplot(data = lab_tests %>% group_by(USUBJID,BMRKR1,BMRKR2) %>% count(),
-                  aes(x = !!sym(col1))) +
-        geom_bar(stat = "count", fill = "maroon") +
-        coord_flip()
+      p <- ggplot(data = distinct(select(lab_tests,c("USUBJID","BMRKR2"))), aes(x = !!sym(col1))) +
+              geom_bar(stat = "count", fill = "maroon")
     }
 
     else {
      p <- ggplot(data = patients, aes(x = !!sym(col1))) +
-        geom_bar(stat = "count", fill = "maroon") +
-        coord_flip()
+             geom_bar(stat = "count", fill = "maroon") +
+             scale_x_discrete(breaks = levels(patients[[col1]]),
+                              labels = addline_format(levels(patients[[col1]])))
     }
 
     p + labs(title = paste0("Distribution of Patients vs ",col1)) +
         theme(plot.title = element_text(hjust = 0.5),
-              title = element_text(face = "bold"))
+              title = element_text(face = "bold"),
+              axis.text.x = element_text(size  = 10))
+
     })
+
+  ### patient details
+  output$patient_details <- function(){
+    patient_id <- input$patient_id
+    req(patient_id)
+
+    patient_lab_tests <- filter(lab_tests_joined, USUBJID==patient_id) %>%
+                         select(c("BMRKR1","BMRKR2","AGE","SEX","RACE","ACTARM")) %>%
+                         distinct() %>%
+                         mutate(BMRKR1 = round(BMRKR1,4))
+
+
+    melt(patient_lab_tests,
+      measure.vars = c("AGE","SEX","RACE","BMRKR1","BMRKR2","ACTARM"),
+      variable.name = "Attribute", value.name = "Value") %>%
+      kable() %>%
+      kable_styling(bootstrap_options = "striped", full_width = F, position = "left") %>%
+      pack_rows("Demographic",1,3) %>%
+      pack_rows("Medical",4,6)
+
+  }
 
 
   ### patient level plot
@@ -75,13 +101,17 @@ server <- function(input, output, session) {
     req(input$sex)
     req(input$race)
     req(input$lbtestcd)
+    req(input$bmrkr1)
     req(input$bmrkr2)
 
+    bmrkr1_vals <- input$bmrkr1
 
     grouped <- lab_tests_joined %>%
       filter(SEX %in% input$sex,
              RACE %in% input$race,
              LBTESTCD %in% input$lbtestcd,
+             BMRKR1 >= bmrkr1_vals[1],
+             BMRKR1 < bmrkr1_vals[2],
              BMRKR2 %in%  input$bmrkr2) %>%
       group_by(ACTARM,AVISIT,AVALU,LBTEST) %>%
       summarise(AVAL_SD = sd(AVAL),

@@ -6,6 +6,9 @@
 #' @import ggplot2
 #' @import dplyr
 #' @importFrom DT datatable formatRound renderDataTable dataTableOutput
+#' @importFrom reshape2 melt
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling
 #' @importFrom shinythemes shinytheme
 
 
